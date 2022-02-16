@@ -1,0 +1,16 @@
+.todoItem {
+  border: 1px solid grey;
+  padding: 20px;
+  margin: 20px;
+}
+.input {
+  height: 40px;
+  width: -webkit-fill-available;
+  margin: 20px;
+  display: flex;
+}
+
+.buttonAdd {
+  height: 40px;
+  width: 200px;
+}
