@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import todoApi from './todoApi'
+import { api } from './rktQueryApi'
 
 export const getListTodo = createAsyncThunk('todo/getListTodo', async (params, thunkAPI) => {
   // thunkAPI.dispatch(...)
@@ -38,38 +39,49 @@ export const todosSlice = createSlice({
     },
   },
   // handle response data from api
-  extraReducers: {
-    [getListTodo.pending]: (state, action) => {
-      state.loading = true;
-    },
-    [getListTodo.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.value = action.payload.data;
-    },
-    [getListTodo.rejected]: (state, action) => {
-      state.value = false;
-    },
-  }
-
-  // another way to handle response data from api
-  // extraReducers: (builder) => {
-  //   // Start request
-  //   builder.addCase(getListTodo.pending, (state) => {
+  // extraReducers: {
+  //   [getListTodo.pending]: (state, action) => {
   //     state.loading = true;
-  //   });
-
-  //   // Request successful
-  //   builder.addCase(getListTodo.fulfilled, (state, action) => {
+  //   },
+  //   [getListTodo.fulfilled]: (state, action) => {
   //     state.loading = false;
   //     state.value = action.payload.data;
-  //   });
+  //   },
+  //   [getListTodo.rejected]: (state, action) => {
+  //     state.value = false;
+  //   },
 
-  //   // Request error
-  //   builder.addCase(getListTodo.rejected, (state, action) => {
-  //     state.loading = false;
-  //     state.errorMessage = action.payload.message;
-  //   });
-  // },
+  //   [api.endpoints.login.matchFulfilled]: (state, action) => {
+  //     console.log('actionaction', action)
+  //     state.user = action.payload;
+  //   },
+  // }
+
+  // another way to handle response data from api
+  extraReducers: (builder) => {
+    // Start request
+    builder.addCase(getListTodo.pending, (state) => {
+      state.loading = true;
+    });
+
+    // Request successful
+    builder.addCase(getListTodo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.value = action.payload.data;
+    });
+
+    // Request error
+    builder.addCase(getListTodo.rejected, (state, action) => {
+      state.loading = false;
+      state.errorMessage = action.payload.message;
+    });
+
+    // handle response from rtk query
+    builder.addMatcher(api.endpoints.login.matchFulfilled, (state, action) => {  // api.endpoints.login. => ".login" là key ở dòng 11 file rktQueryApi
+      console.log('action.payloadxxx', action.payload)
+      state.currentUser = action.payload;
+    });
+  },
 });
 
 export const selectTodos = state => state.todos.value;
