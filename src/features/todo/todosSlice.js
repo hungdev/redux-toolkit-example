@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import todoApi from './todoApi'
+import todoApi from './todoApi';
+import instance from '../../configs/axiosConfig';
 
 export const getListTodo = createAsyncThunk('todo/getListTodo', async (params, thunkAPI) => {
   // thunkAPI.dispatch(...)
   const list = await todoApi.getList();
-  console.log('list', list)
+  console.log('list', list);
   return list;
 });
 
@@ -24,13 +25,13 @@ export const todosSlice = createSlice({
       // mutate the state because it uses the immer library, which detects
       // changes to a "draft state" and produces a brand new immutable state
       // based off those changes
-      state.value.push({ name: action.payload.name, completed: false })
+      state.value.push({ name: action.payload.name, completed: false });
     },
     completeTodo: (state, action) => {
       state.value[action.payload.index].completed = true;
     },
     removeTodo: (state, action) => {
-      state.value.splice(action.payload, 1)
+      state.value.splice(action.payload, 1);
       // we have another way to do: state.value = filteredData and dont need to return
       // and also we can return like old way
       // const filteredData = state.value.filter((element, index) => index !== action.payload.index)
